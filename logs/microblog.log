@@ -1,3 +1,38 @@
 2020-03-16 14:48:02,998 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
 2020-03-16 14:48:19,653 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
 2020-03-17 21:03:52,360 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-17 23:04:51,446 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-17 23:05:17,807 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-17 23:05:34,879 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-17 23:06:17,409 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-17 23:53:24,553 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-18 00:06:00,098 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
+2020-03-18 00:07:00,437 ERROR: Exception on /follow/susan [GET] [in e:\flask_project\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "e:\flask_project\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "e:\flask_project\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "E:\Flask_Project\app\routes.py", line 113, in follow
+    return redirect(url_for('user'),username=username)
+  File "e:\flask_project\venv\lib\site-packages\flask\helpers.py", line 370, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "e:\flask_project\venv\lib\site-packages\flask\app.py", line 2215, in handle_url_build_error
+    reraise(exc_type, exc_value, tb)
+  File "e:\flask_project\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "e:\flask_project\venv\lib\site-packages\flask\helpers.py", line 358, in url_for
+    endpoint, values, method=method, force_external=external
+  File "e:\flask_project\venv\lib\site-packages\werkzeug\routing.py", line 2179, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.BuildError: Could not build url for endpoint 'user'. Did you forget to specify values ['username']?
