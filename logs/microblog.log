@@ -91,3 +91,4 @@ Traceback (most recent call last):
   File "e:\flask_project\venv\lib\site-packages\werkzeug\routing.py", line 2179, in build
     raise BuildError(endpoint, values, method, self)
 werkzeug.routing.BuildError: Could not build url for endpoint 'explore'. Did you mean 'edit_profile' instead?
+2020-03-19 12:28:28,304 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:46]
