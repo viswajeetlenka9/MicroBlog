@@ -16,12 +16,12 @@ from app.translate import translate
 def index():
 	form = PostForm()
 	if form.validate_on_submit():
-		print(form.post.data)
 		language = guess_language(form.post.data)
 		print(language)
+		print(form.post.data)
 		if language == 'UNKNOWN' or len(language) > 5:
 			language = ''
-		post = Post(body=form.post.data, author=current_user)
+		post = Post(body=form.post.data, author=current_user,language=language)
 		db.session.add(post)
 		db.session.commit()
 		flash(_('Your post is now live!'))
@@ -29,6 +29,8 @@ def index():
 	#user = {'username': 'Susan'}
 	page = request.args.get('page', 1, type=int)
 	posts = current_user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
+	print(posts.items[0].body)
+	print(posts.items[0].language)
 	next_url = url_for('index', page=posts.next_num) \
 		if posts.has_next else None
 	prev_url = url_for('index', page=posts.prev_num) \
@@ -95,6 +97,7 @@ def before_request():
 		current_user.last_seen = datetime.utcnow()
 		db.session.commit()
 	g.locale = str(get_locale())
+	print(g.locale)
 
 
 @app.route('/edit_profile',methods=['GET','POST'])
