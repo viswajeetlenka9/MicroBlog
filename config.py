@@ -1,5 +1,11 @@
 import os
+from dotenv import load_dotenv
+
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+
+
 
 class Config(object):
 	#Application Configuration
@@ -20,3 +26,4 @@ class Config(object):
 	POSTS_PER_PAGE = 3
 	LANGUAGES = ['en','es']
 	MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
+	#MS_TRANSLATOR_KEY = '58e22eb0f19e4e0598efe11f39ab9c06'
