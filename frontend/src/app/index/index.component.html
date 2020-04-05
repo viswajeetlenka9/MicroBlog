@@ -1,0 +1,17 @@
+<h1>Hello, <span *ngIf='current_user.username'>{{ current_user.username }}</span>!</h1>
+<hr>
+<app-posts></app-posts>
+<nav aria-label="...">
+  <ul class="pager">
+      <li class="disabled">
+          <a href="#">
+              <span aria-hidden="true">&larr;</span> Newer posts
+          </a>
+      </li>
+      <li class="disabled">
+          <a href="#">
+              Older posts<span aria-hidden="true">&rarr;</span>
+          </a>
+      </li>
+  </ul>
+</nav>
