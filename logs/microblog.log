@@ -96,3 +96,5 @@ werkzeug.routing.BuildError: Could not build url for endpoint 'explore'. Did you
 2020-03-25 13:09:28,744 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:77]
 2020-03-25 13:09:39,867 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:77]
 2020-03-25 13:25:27,271 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:77]
+2020-03-25 21:08:21,668 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:77]
+2020-04-02 21:04:10,542 INFO: Microblog startup [in E:\Flask_Project\app\__init__.py:80]

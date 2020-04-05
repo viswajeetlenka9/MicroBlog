@@ -9,7 +9,16 @@ from app.api.auth import token_auth
 @bp.route('/users/<int:id>', methods=['GET'])
 @token_auth.login_required
 def get_user(id):
-	return jsonify(User.query.get_or_404(id).to_dict())
+	response = jsonify(User.query.get_or_404(id).to_dict())
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
+
+@bp.route('/users/<string:username>', methods=['GET'])
+@token_auth.login_required
+def get_user_username(username):
+	response = jsonify(User.query.filter_by(username=username).first().to_dict())
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 
 @bp.route('/users', methods=['GET'])
@@ -18,7 +27,9 @@ def get_users():
 	page = request.args.get('page', 1, type=int)
 	per_page = min(request.args.get('per_page', 10, type=int), 100)
 	data = User.to_collection_dict(User.query, page, per_page, 'api.get_users')
-	return jsonify(data)
+	response = jsonify(data)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 
 @bp.route('/users/<int:id>/followers', methods=['GET'])
@@ -28,7 +39,9 @@ def get_followers(id):
 	page = request.args.get('page', 1, type=int)
 	per_page = min(request.args.get('per_page', 10, type=int), 100)
 	data = User.to_collection_dict(user.followers, page, per_page,'api.get_followers', id=id)
-	return jsonify(data)
+	response = jsonify(data)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 @bp.route('/users/<int:id>/followed', methods=['GET'])
 @token_auth.login_required
@@ -37,7 +50,9 @@ def get_followed(id):
 	page = request.args.get('page', 1, type=int)
 	per_page = min(request.args.get('per_page', 10, type=int), 100)
 	data = User.to_collection_dict(user.followed, page, per_page,'api.get_followed', id=id)
-	return jsonify(data)
+	response = jsonify(data)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 
 @bp.route('/users', methods=['POST'])
@@ -56,6 +71,7 @@ def create_user():
 	response = jsonify(user.to_dict())
 	response.status_code = 201
 	response.headers['Location'] = url_for('api.get_user', id=user.id)
+	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
 
@@ -72,4 +88,6 @@ def update_user(id):
 		return bad_request('please use a different email address')
 	user.from_dict(data, new_user=False)
 	db.session.commit()
-	return jsonify(user.to_dict())
+	response = jsonify(user.to_dict())
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response

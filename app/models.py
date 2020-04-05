@@ -154,7 +154,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Post(db.Model):
+class Post(db.Model,PaginatedAPIMixin):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -163,4 +163,21 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+    def to_dict(self):
+        data = {
+            'id':self.id,
+            'body':self.body,
+            #'last_seen': self.last_seen.isoformat() + 'Z',
+            'timestamp':self.timestamp,
+            'user_id':self.user_id,
+            'language': self.language,
+            'author':self.author.username,
+        }
+        return data
+
+    def from_dict(self, data):
+        for field in ['body','user_id']:
+            if field in data:
+                setattr(self, field, data[field])
 
