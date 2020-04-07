@@ -20,6 +20,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MicroBlogService } from './micro-blog.service';
 import { PostsComponent } from './posts/posts.component';
+import { RegisterComponent } from './register/register.component';
+import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
+import { ProfileComponent } from './profile/profile.component';
 
 //import { ErrorInterceptor } from './_helpers/error.interceptor';
 
@@ -29,7 +32,10 @@ import { PostsComponent } from './posts/posts.component';
     IndexComponent,
     LoginComponent,
     PageNotFoundComponent,
-    PostsComponent
+    PostsComponent,
+    RegisterComponent,
+    ResetpasswordComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

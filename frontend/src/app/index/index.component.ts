@@ -36,7 +36,8 @@ export class IndexComponent implements OnInit {
     
     if((this.microblogservice.token == undefined && currentUser == null) || this.microblogservice.token == '')
     {
-      alert('You need to login first!');
+      alert("1");
+      this.microblogservice.errorMsg = "Please login to access this page";
       this.router.navigate(['/login']);
     }
     else
@@ -44,6 +45,7 @@ export class IndexComponent implements OnInit {
       if(currentUser != null)
       {
         this.current_user = currentUser;
+        this.microblogservice.isloggedIn = true;
       }
       else
       {
@@ -52,6 +54,7 @@ export class IndexComponent implements OnInit {
             .subscribe((res: any) => {
               console.log(res);
               this.current_user = res;
+              this.microblogservice.isloggedIn = true;
             },
           );
       }

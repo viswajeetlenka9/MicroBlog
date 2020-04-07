@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IndexComponent } from './index/index.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { RegisterComponent } from './register/register.component';
+import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 
 
 const routes: Routes = [
@@ -19,6 +21,14 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginComponent
+  },
+  {
+    path: "register",
+    component: RegisterComponent
+  },
+  {
+    path: "resetpassword",
+    component: ResetpasswordComponent
   },
   {
     path: "**",//The wild card route should be the last route otherwise the routes below wildcard route will be ignored.

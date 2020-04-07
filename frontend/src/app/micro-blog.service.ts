@@ -9,9 +9,10 @@ import { retry, catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class MicroBlogService {
+  errorMsg : string = '';
   username = '';
   token : string;
-  isloggedIn : boolean;
+  isloggedIn : boolean = false;
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   private currentUser_postsSubject: BehaviorSubject<Post[]>;
@@ -35,6 +36,14 @@ export class MicroBlogService {
       if(error.status == 401)
       {
         errorMessage = "Username and Password is incorrect!";
+      }
+      else if(error.status == 400)
+      {
+        errorMessage = "Bad request";
+      }
+      else
+      {
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       }
     }
     return throwError(errorMessage);
@@ -76,6 +85,21 @@ export class MicroBlogService {
   }));
   }
 
+  public registerUser(username : string, email : string , password: string): Observable<any>{
+    let newUser: User = new User();
+    newUser.username = username;
+    newUser.email = email;
+    newUser.password = password;
+    var header = {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    }
+    return this.http.post<JSON>(`${environment.apiUrl}/api/users`,JSON.stringify(newUser),header)
+    .pipe(map(response => {
+      console.log(response);
+      return response;
+    }))
+  }
+
   public getPost(token: string): Observable<any> {
     this.token = token;
     var header = {
@@ -86,7 +110,7 @@ export class MicroBlogService {
       // store post details in local storage to keep user posts logged in between page refreshes
       localStorage.setItem('currentUser_posts', JSON.stringify(post.items));
       this.currentUser_postsSubject.next(post.items);
-      return post;
+      return post.items;
   }));
   }
 
@@ -95,11 +119,13 @@ export class MicroBlogService {
     // remove user from local storage to log user out
     this.token = '';
     this.username = '';
+    this.isloggedIn = false;
+    this.errorMsg = "You are logged out";
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentUser_posts');
     this.currentUserSubject.next(null);
     this.currentUser_postsSubject.next(null);
-    alert('logged out');
+    this.errorMsg = "You are logged out";
 }
 
   

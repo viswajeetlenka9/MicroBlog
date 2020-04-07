@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy} from '@angular/core';
-import { FormBuilder,FormGroup, FormControl, Validators, RequiredValidator } from '@angular/forms'
+import { FormBuilder,FormGroup, FormControl, Validators, RequiredValidator } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IndexComponent } from '../index/index.component';
 import { MicroBlogService } from '../micro-blog.service';
@@ -14,6 +14,7 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit, OnDestroy{
 
+  isloggedIn : boolean;
   errorMsg :string = '';
   token : string = '';
   current_user : User;
@@ -26,11 +27,17 @@ export class LoginComponent implements OnInit, OnDestroy{
   })
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  @Input() username : IndexComponent;
+  //@Input() username : IndexComponent;
   constructor(private fb: FormBuilder,private router:Router, private microblogservice: MicroBlogService ) { }
 
   ngOnInit(): void {
-    this.microblogservice.logout();
+    this.isloggedIn = this.microblogservice.isloggedIn;
+    if(this.isloggedIn)
+    {
+      alert("logged out");
+      this.microblogservice.logout();
+    }
+    this.errorMsg = this.microblogservice.errorMsg;
   }
 
   ngOnDestroy(){
@@ -41,6 +48,10 @@ export class LoginComponent implements OnInit, OnDestroy{
 
   
   signInClick(){
+      if(this.loginForm.value.remembermeCheck == true)
+      {
+        alert('remember me checked');
+      }
       this.verify_user = this.microblogservice
       .getToken(this.loginForm.value.username,this.loginForm.value.password)
       .subscribe((res: any) => {

@@ -25,6 +25,7 @@ export class AppComponent implements OnInit{
   }
 
   public get loggedIn(): boolean {
+    console.log(this.microblogservice.isloggedIn);
     return this.microblogservice.isloggedIn;
   }
 

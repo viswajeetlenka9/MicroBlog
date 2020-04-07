@@ -1,0 +1,33 @@
+<br>
+<div class="container">
+    <div class="alert alert-info" role="alert" *ngIf="errorMsg">
+        {{errorMsg}}
+    </div>
+    <h1>Register</h1>
+    <form [formGroup]="registerForm" (ngSubmit)="registerInClick()">
+        <div class="form-group" >
+            <label for="username">Username</label>
+            <input type="text" formControlName="username" name="username" class="form-control" placeholder="Username" required>
+        </div>
+        <div class="form-group" >
+            <label for="username">Email</label>
+            <input type="email" formControlName="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" formControlName="password1" name="password1" class="form-control" placeholder="Password" required>
+            <div class="invalid-feedback">
+                <span>Password is required!</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Repeat Password</label>
+            <input type="password" formControlName="password2" name="password2" class="form-control" placeholder=" Repeat Password" required>
+            <div class="invalid-feedback">
+                <span>Password is required!</span>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-secondary" >Register</button>
+    </form>
+</div>

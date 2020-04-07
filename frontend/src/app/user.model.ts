@@ -3,7 +3,7 @@ export class User {
       public id?: number,
       public username?: string,
       public email?: string,
-      public password_hash?: string,
+      public password?: string,
       public about_me?: string,
       public last_seen?: Date,
       public token?: string,
