@@ -42,6 +42,7 @@ def get_all_posts():
 
 
 @bp.route('/posts', methods=['POST'])
+@token_auth.login_required
 def create_post():
 	data = request.get_json() or {}
 	if 'user_id' not in data or 'body' not in data:

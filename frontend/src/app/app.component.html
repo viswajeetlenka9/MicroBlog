@@ -8,13 +8,13 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="nav navbar-nav">
-      <li><a class="nav-link" routerLink="/index" >Index <!--<span class="sr-only">(current)</span>--></a></li>
-      <li><a class="nav-link" href="#">Explore</a></li>
+      <li><a class="nav-link" routerLink="/index" routerLinkActive="active">Index <!--<span class="sr-only">(current)</span>--></a></li>
+      <li><a class="nav-link" routerLink="/index" routerLinkActive="active">Explore</a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li *ngIf="!loggedIn"><a class="nav-link" routerLink="/login">Login</a></li>
-      <li *ngIf="loggedIn"><a class="nav-link" href="#">Profile</a></li>
-      <li *ngIf="loggedIn"><a class="nav-link" routerLink="/login">Log Out</a></li>
+    <ul class="nav navbar-nav nav-right">
+      <li class="nav-item" *ngIf="!loggedIn == true"><a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a></li>
+      <li class="nav-item" *ngIf="loggedIn == true"><a class="nav-link" (click)="redirect_to_profile()" routerLinkActive="active">Profile</a></li>
+      <li class="nav-item" *ngIf="loggedIn == true"><a class="nav-link" routerLink="/login" routerLinkActive="active">Log Out</a></li>
     </ul>
   </div>
 </nav>

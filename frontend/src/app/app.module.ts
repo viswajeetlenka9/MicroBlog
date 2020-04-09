@@ -23,6 +23,7 @@ import { PostsComponent } from './posts/posts.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ExploreComponent } from './explore/explore.component';
 
 //import { ErrorInterceptor } from './_helpers/error.interceptor';
 
@@ -35,7 +36,8 @@ import { ProfileComponent } from './profile/profile.component';
     PostsComponent,
     RegisterComponent,
     ResetpasswordComponent,
-    ProfileComponent
+    ProfileComponent,
+    ExploreComponent
   ],
   imports: [
     BrowserModule,

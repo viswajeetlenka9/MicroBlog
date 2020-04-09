@@ -34,10 +34,10 @@ export class LoginComponent implements OnInit, OnDestroy{
     this.isloggedIn = this.microblogservice.isloggedIn;
     if(this.isloggedIn)
     {
-      alert("logged out");
       this.microblogservice.logout();
     }
     this.errorMsg = this.microblogservice.errorMsg;
+    
   }
 
   ngOnDestroy(){

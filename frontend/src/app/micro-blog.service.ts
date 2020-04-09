@@ -4,6 +4,8 @@ import { environment } from './env'
 import {HttpClient, HttpErrorResponse,HttpHeaders, HttpResponse} from '@angular/common/http';
 import {Observable, BehaviorSubject, throwError, of} from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class MicroBlogService {
   private currentUser_postsSubject: BehaviorSubject<Post[]>;
   public currentUser_posts: Observable<Post[]>;
 
-  constructor(private http: HttpClient) {
+  constructor(private router: Router,private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
         this.currentUser_postsSubject = new BehaviorSubject<Post[]>(JSON.parse(localStorage.getItem('currentUser_posts')));
@@ -77,12 +79,28 @@ export class MicroBlogService {
     }
     return this.http.get<User>(`${environment.apiUrl}/api/users/`+this.username,header)
     .pipe(map(user => {
+      console.log(user);
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUserSubject.next(user);
       this.isloggedIn = true;
       return user;
   }));
+  }
+
+  public submitPost(user_id : number, post: string): Observable<any>{
+    let newPost: Post = new Post();
+    newPost.user_id = user_id;
+    newPost.body = post;
+    var header = {
+      headers: new HttpHeaders().set('Authorization',  `Bearer ${this.token}`)
+      .set('Content-Type', 'application/json')
+    }
+    return this.http.post<JSON>(`${environment.apiUrl}/api/posts`,JSON.stringify(newPost),header)
+    .pipe(map(response => {
+      console.log(response);
+      return response;
+    }))
   }
 
   public registerUser(username : string, email : string , password: string): Observable<any>{
@@ -107,6 +125,7 @@ export class MicroBlogService {
     }
     return this.http.get<any>(`${environment.apiUrl}/api/posts/`+this.username,header)
     .pipe(map(post => {
+      console.log(post);
       // store post details in local storage to keep user posts logged in between page refreshes
       localStorage.setItem('currentUser_posts', JSON.stringify(post.items));
       this.currentUser_postsSubject.next(post.items);
@@ -117,15 +136,24 @@ export class MicroBlogService {
 
   logout() {
     // remove user from local storage to log user out
+    this.router.navigate(['/login']);
+    //window.location.reload();
+    if(this.isloggedIn == true)
+    {
+      this.errorMsg = "You are logged out";
+    }
+    else
+    {
+      this.errorMsg = "Please login to access this page"
+    }
     this.token = '';
     this.username = '';
     this.isloggedIn = false;
-    this.errorMsg = "You are logged out";
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentUser_posts');
     this.currentUserSubject.next(null);
     this.currentUser_postsSubject.next(null);
-    this.errorMsg = "You are logged out";
+    
 }
 
   

@@ -1,17 +1,45 @@
-<h1>Hello, <span *ngIf='current_user.username'>{{ current_user.username }}</span>!</h1>
-<hr>
-<app-posts></app-posts>
-<nav aria-label="...">
-  <ul class="pager">
-      <li class="disabled">
-          <a href="#">
-              <span aria-hidden="true">&larr;</span> Newer posts
-          </a>
-      </li>
-      <li class="disabled">
-          <a href="#">
-              Older posts<span aria-hidden="true">&rarr;</span>
-          </a>
-      </li>
-  </ul>
-</nav>
+<div class="container">
+    <h1>Hi, <span *ngIf='current_user.username'>{{ current_user.username }}</span>!</h1>
+    <div class="alert alert-info" role="alert" *ngIf="errorMsg">
+        {{errorMsg}}
+    </div>
+    <form [formGroup]="postForm" (ngSubmit)="postFormClick()">
+        <div class="form-group" >
+            <label class="control-label" for="post">Say something</label>
+            <textarea class="form-control" formControlName="post" id="post" name="post" required></textarea>
+        </div>
+        <button class="btn btn-secondary" >Submit</button>
+    </form>
+    <br>
+    <table class="table table-hover">
+        <tr *ngFor="let post of current_user_posts">
+            <td width="70px">
+                <a href="#">
+                    <img src="{{current_user._links.avatar}}" />
+                </a>
+            </td>
+            <td>
+                    <a href="#">
+                        {{ post.author }} 
+                    </a>
+                    said
+                <br>
+                <span id="post.id">{{ post.body }}</span>
+            </td>
+        </tr>
+    </table>
+    <nav aria-label="...">
+    <ul class="pager">
+        <li class="disabled">
+            <a href="#">
+                <span aria-hidden="true">&larr;</span> Newer posts
+            </a>
+        </li>
+        <li class="disabled">
+            <a href="#">
+                Older posts<span aria-hidden="true">&rarr;</span>
+            </a>
+        </li>
+    </ul>
+    </nav>
+</div>

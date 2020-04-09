@@ -7,7 +7,13 @@ export class User {
       public about_me?: string,
       public last_seen?: Date,
       public token?: string,
-      public token_expiration?: Date
+      public token_expiration?: Date,
+      public _links? : {
+        avatar : string,
+        self : string,
+        followed : string,
+        followers : string
+      }
     ) { }
   }
 
