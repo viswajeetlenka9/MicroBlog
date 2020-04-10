@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>Hi, <span *ngIf='current_user.username'>{{ current_user.username }}</span>!</h1>
+    <h1>Hi, {{ current_user.username }}!</h1>
     <div class="alert alert-info" role="alert" *ngIf="errorMsg">
         {{errorMsg}}
     </div>
@@ -12,7 +12,7 @@
     </form>
     <br>
     <table class="table table-hover">
-        <tr *ngFor="let post of current_user_posts">
+        <tr *ngFor="let post of current_user_posts.items">
             <td width="70px">
                 <a href="#">
                     <img src="{{current_user._links.avatar}}" />
@@ -28,18 +28,11 @@
             </td>
         </tr>
     </table>
-    <nav aria-label="...">
-    <ul class="pager">
-        <li class="disabled">
-            <a href="#">
-                <span aria-hidden="true">&larr;</span> Newer posts
-            </a>
-        </li>
-        <li class="disabled">
-            <a href="#">
-                Older posts<span aria-hidden="true">&rarr;</span>
-            </a>
-        </li>
-    </ul>
+    <nav aria-label="Page navigation">
+        <ul class="pager">
+          <li class="page-item float-left" [class]="isprevious_present"><a class="page-link" (click)="getPrevious()">Previous</a></li>
+          
+          <li class="page-item float-right" [class]="isnext_present"><a class="page-link" (click)="getNext()">Next</a></li>
+        </ul>
     </nav>
 </div>

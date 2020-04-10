@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, Post } from './user.model';
+import { User, Post, PostArray } from './user.model';
 import { environment } from './env'
 import {HttpClient, HttpErrorResponse,HttpHeaders, HttpResponse} from '@angular/common/http';
 import {Observable, BehaviorSubject, throwError, of} from 'rxjs';
@@ -17,46 +17,32 @@ export class MicroBlogService {
   isloggedIn : boolean = false;
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
-  private currentUser_postsSubject: BehaviorSubject<Post[]>;
-  public currentUser_posts: Observable<Post[]>;
+  private currentUser_postsSubject: BehaviorSubject<PostArray>;
+  public currentUser_posts: Observable<PostArray>;
+  private allUser_postsSubject: BehaviorSubject<PostArray>;
+  public allUser_posts: Observable<PostArray>;
 
   constructor(private router: Router,private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
-        this.currentUser_postsSubject = new BehaviorSubject<Post[]>(JSON.parse(localStorage.getItem('currentUser_posts')));
-        this.currentUser_posts = this.currentUser_postsSubject.asObservable();
-  }
 
-  errorHandler(error: HttpErrorResponse) {
-    let errorMessage = "Unknown Error!";
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      //errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      if(error.status == 401)
-      {
-        errorMessage = "Username and Password is incorrect!";
-      }
-      else if(error.status == 400)
-      {
-        errorMessage = "Bad request";
-      }
-      else
-      {
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      }
-    }
-    return throwError(errorMessage);
+        this.currentUser_postsSubject = new BehaviorSubject<PostArray>(JSON.parse(localStorage.getItem('currentUser_posts')));
+        this.currentUser_posts = this.currentUser_postsSubject.asObservable();
+
+        this.allUser_postsSubject = new BehaviorSubject<PostArray>(JSON.parse(localStorage.getItem('allUsers_posts')));
+        this.allUser_posts = this.allUser_postsSubject.asObservable();
   }
 
   public get currentUserValue() : User {
     return this.currentUserSubject.value;
   }
 
-  public get currentUser_postsValue() : Post[] {
+  public get currentUser_postsValue() : PostArray {
     return this.currentUser_postsSubject.value;
+  }
+
+  public get allUser_postsValue() : PostArray {
+    return this.allUser_postsSubject.value;
   }
   
 
@@ -79,7 +65,6 @@ export class MicroBlogService {
     }
     return this.http.get<User>(`${environment.apiUrl}/api/users/`+this.username,header)
     .pipe(map(user => {
-      console.log(user);
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUserSubject.next(user);
@@ -98,7 +83,6 @@ export class MicroBlogService {
     }
     return this.http.post<JSON>(`${environment.apiUrl}/api/posts`,JSON.stringify(newPost),header)
     .pipe(map(response => {
-      console.log(response);
       return response;
     }))
   }
@@ -113,26 +97,37 @@ export class MicroBlogService {
     }
     return this.http.post<JSON>(`${environment.apiUrl}/api/users`,JSON.stringify(newUser),header)
     .pipe(map(response => {
-      console.log(response);
       return response;
     }))
   }
 
-  public getPost(token: string): Observable<any> {
+  public getPost(token: string, pageno: number): Observable<PostArray> {
     this.token = token;
     var header = {
       headers: new HttpHeaders().set('Authorization',  `Bearer ${this.token}`)
     }
-    return this.http.get<any>(`${environment.apiUrl}/api/posts/`+this.username,header)
+    return this.http.get<PostArray>(`${environment.apiUrl}/api/posts/${this.username}?page=`+pageno,header)
     .pipe(map(post => {
-      console.log(post);
       // store post details in local storage to keep user posts logged in between page refreshes
-      localStorage.setItem('currentUser_posts', JSON.stringify(post.items));
-      this.currentUser_postsSubject.next(post.items);
-      return post.items;
+      localStorage.setItem('currentUser_posts', JSON.stringify(post));
+      this.currentUser_postsSubject.next(post);
+      return post;
   }));
   }
 
+  public getallPosts(token: string,pageno: number): Observable<PostArray> {
+    this.token = token;
+    var header = {
+      headers: new HttpHeaders().set('Authorization',  `Bearer ${this.token}`)
+    }
+    return this.http.get<PostArray>(`${environment.apiUrl}/api/posts?page=`+pageno,header)
+    .pipe(map(post => {
+      // store post details in local storage to keep user posts logged in between page refreshes
+      localStorage.setItem('allUsers_posts', JSON.stringify(post));
+      this.allUser_postsSubject.next(post);
+      return post;
+  }));
+  }
 
   logout() {
     // remove user from local storage to log user out
@@ -151,10 +146,35 @@ export class MicroBlogService {
     this.isloggedIn = false;
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentUser_posts');
+    localStorage.removeItem('allUsers_posts');
     this.currentUserSubject.next(null);
     this.currentUser_postsSubject.next(null);
+    this.allUser_postsSubject.next(null);
     
 }
 
+errorHandler(error: HttpErrorResponse) {
+  let errorMessage = "Unknown Error!";
+  if (error.error instanceof ErrorEvent) {
+    // Client-side errors
+    errorMessage = `Error: ${error.error.message}`;
+  } else {
+    // Server-side errors
+    //errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    if(error.status == 401)
+    {
+      errorMessage = "Username and Password is incorrect!";
+    }
+    else if(error.status == 400)
+    {
+      errorMessage = "Bad request";
+    }
+    else
+    {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+  }
+  return throwError(errorMessage);
+}
   
 }

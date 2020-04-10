@@ -1,1 +1,27 @@
-<p>explore works!</p>
+<div class="container">
+    <h1>Hi, {{ username }}!</h1>
+    <table class="table table-hover">
+        <tr *ngFor="let post of all_users_posts.items">
+            <td width="70px">
+                <a href="#">
+                    <img src="#" />
+                </a>
+            </td>
+            <td>
+                    <a href="#">
+                        {{ post.author }} 
+                    </a>
+                    said
+                <br>
+                <span id="post.id">{{ post.body }}</span>
+            </td>
+        </tr>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pager">
+          <li class="page-item float-left" [class]="isprevious_present"><a class="page-link" (click)="getPrevious()">Previous</a></li>
+          
+          <li class="page-item float-right" [class]="isnext_present"><a class="page-link" (click)="getNext()">Next</a></li>
+        </ul>
+    </nav>
+</div>

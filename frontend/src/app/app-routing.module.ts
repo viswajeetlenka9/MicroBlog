@@ -6,6 +6,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ExploreComponent } from './explore/explore.component';
 
 
 const routes: Routes = [
@@ -28,12 +29,16 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: "profile",
+    path: "profile/:username",
     component: ProfileComponent
   },
   {
     path: "resetpassword",
     component: ResetpasswordComponent
+  },
+  {
+    path: "explore",
+    component: ExploreComponent
   },
   {
     path: "**",//The wild card route should be the last route otherwise the routes below wildcard route will be ignored.

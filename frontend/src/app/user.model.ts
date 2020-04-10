@@ -1,3 +1,5 @@
+
+
 export class User {
     constructor(
       public id?: number,
@@ -25,7 +27,26 @@ export class User {
       public timestamp?: Date,
       public user_id? : number,
       public language? : string,
-      public author? : string
+      public author? : string,
+    ){
+      
+    }
+  }
+
+  export class PostArray {
+    constructor(
+        public _links? : {
+            next? : string,
+            prev? : string,
+            self? : string
+          },
+          public _meta? : {
+            page? : number,
+            per_page? : number,
+            total_items? : number,
+            total_pages? : number
+          },
+          public items? : Post[]
     ){
       
     }

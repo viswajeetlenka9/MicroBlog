@@ -11,8 +11,8 @@ from app.api.auth import token_auth
 def get_post_of_user(id):
 	user = User.query.get_or_404(id)
 	page = request.args.get('page', 1, type=int)
-	per_page = min(request.args.get('per_page', 10, type=int), 100)
-	data = Post.to_collection_dict(user.posts, page, per_page,'api.get_post_of_user', id=id)
+	per_page = min(request.args.get('per_page', 5, type=int), 100)
+	data = Post.to_collection_dict(user.posts.order_by(Post.timestamp.desc()), page, per_page,'api.get_post_of_user', id=id)
 	response = jsonify(data)
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
@@ -23,8 +23,8 @@ def get_post_of_user(id):
 def get_post_of_user_by_username(username):
 	user = User.query.filter_by(username=username).first_or_404()
 	page = request.args.get('page', 1, type=int)
-	per_page = min(request.args.get('per_page', 20, type=int), 100)
-	data = Post.to_collection_dict(user.posts, page, per_page,'api.get_post_of_user_by_username', username=username)
+	per_page = min(request.args.get('per_page', 5, type=int), 100)
+	data = Post.to_collection_dict(user.posts.order_by(Post.timestamp.desc()), page, per_page,'api.get_post_of_user_by_username', username=username)
 	response = jsonify(data)
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
@@ -34,7 +34,7 @@ def get_post_of_user_by_username(username):
 @token_auth.login_required
 def get_all_posts():
 	page = request.args.get('page', 1, type=int)
-	per_page = min(request.args.get('per_page', 10, type=int), 100)
+	per_page = min(request.args.get('per_page', 5, type=int), 100)
 	data = Post.to_collection_dict(Post.query.order_by(Post.timestamp.desc()), page, per_page, 'api.get_all_posts')
 	response = jsonify(data)
 	response.headers.add('Access-Control-Allow-Origin', '*')

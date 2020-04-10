@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder,FormGroup, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
-import { User, Post } from '../user.model';
+import { User, Post, PostArray } from '../user.model';
 import { MicroBlogService } from '../micro-blog.service';
 
 
@@ -16,12 +16,15 @@ export class IndexComponent implements OnInit {
 
   errorMsg :string = '';
   current_user: User = new User();
-  current_user_posts:any;
-  current_user_posts_temp : Post[];
+  current_user_posts: PostArray = new PostArray();
+  //current_user_posts_temp : Post[];
   verify_user: Subscription;
   postForm = new FormGroup({
     post: new FormControl('',Validators.required),
   })
+  isprevious_present = "enabled";
+  isnext_present = "enabled";
+  current_page = 1;
   /*
   user = {'username': 'Viswajeet'}
   posts = [
@@ -40,9 +43,9 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     const currentUser = this.microblogservice.currentUserValue;
     const currentUser_posts = this.microblogservice.currentUser_postsValue;
+
     if((this.microblogservice.token == undefined && currentUser == null) || this.microblogservice.token == '')
     {
-      alert("1");
       this.microblogservice.errorMsg = "Please login to access this page";
       this.microblogservice.logout();
     }
@@ -52,7 +55,6 @@ export class IndexComponent implements OnInit {
       {
         this.current_user = currentUser;
         this.microblogservice.isloggedIn = true;
-        console.log(this.current_user._links.avatar);
       }
       else
       {
@@ -60,14 +62,14 @@ export class IndexComponent implements OnInit {
       }
       if(currentUser_posts != null)
       {
-        this.current_user_posts = this.sort_by_desc(currentUser_posts);
+        this.current_user_posts = currentUser_posts;
+        this.check_previous_next();
       }
       else
       {
-        this.get_post_from_api();
+        this.get_post_from_api(this.current_page);
       }
     }
-    
   }
 
   postFormClick(){
@@ -83,7 +85,7 @@ export class IndexComponent implements OnInit {
         console.log(res);
         this.errorMsg = "Your post is now live";
         this.postForm.reset();
-        this.get_post_from_api();
+        this.get_post_from_api(this.current_page);
         
       })
     }
@@ -92,31 +94,82 @@ export class IndexComponent implements OnInit {
   public get_user_from_api(){
     this.verify_user = this.microblogservice
             .getUser(this.microblogservice.token)
-            .subscribe((res: any) => {
+            .subscribe((res: User) => {
               this.current_user = res;
               this.microblogservice.isloggedIn = true;
+              this.check_previous_next();
             },
           );
   }
 
-  public get_post_from_api(){
+  public get_post_from_api(pageno : number){
     this.verify_user = this.microblogservice
-            .getPost(this.microblogservice.token)
-            .subscribe((res: any) => {
-              this.current_user_posts_temp = res;
-              this.current_user_posts = this.sort_by_desc(this.current_user_posts_temp);
+            .getPost(this.microblogservice.token,pageno)
+            .subscribe((res: PostArray) => {
+              this.current_user_posts = res;
+              console.log(this.current_user_posts);
+              this.check_previous_next();
+            },
+          );
+  }
+
+  public getPrevious(){
+    alert("previous clicked");
+    var pageno = this.current_page - 1;
+    this.microblogservice
+            .getPost(this.microblogservice.token,pageno)
+            .subscribe((res: PostArray) => {
+              this.current_user_posts = res;
+              //this.current_user_posts = this.sort_by_desc(this.current_user_posts);
+              this.current_page = this.current_page - 1;
+              this.check_previous_next();
+              console.log(this.current_user_posts);
               //console.log(moment(this.current_user_posts[0].timestamp).fromNow());
             },
           );
   }
 
+  public getNext(){
+    alert("next clicked");
+    var pageno = this.current_page + 1;
+    this.microblogservice
+            .getPost(this.microblogservice.token,pageno)
+            .subscribe((res: PostArray) => {
+              this.current_user_posts = res;
+              //this.current_user_posts = this.sort_by_desc(this.current_user_posts);
+              this.current_page = this.current_page + 1;
+              this.check_previous_next();
+              console.log(this.current_user_posts);
+              //console.log(moment(this.current_user_posts[0].timestamp).fromNow());
+            },
+          );
+  }
+
+  check_previous_next(){
+    if(this.current_page == 1)
+    {
+      this.isprevious_present = "disabled";
+    }
+    else{
+      this.isprevious_present = "enabled";
+    }
+    if(this.current_page == this.current_user_posts._meta.total_pages)
+    {
+      this.isnext_present = "disabled";
+    }
+    else{
+      this.isnext_present = "enabled";
+    }
+  }
+  
+  /*
   sort_by_desc( current_user_posts_temp : Post[])
   {
     return current_user_posts_temp.sort((a,b) => {
       return (<number>(b.id) - <number>(a.id));
     });
   }
-
+  */
   
 
 }

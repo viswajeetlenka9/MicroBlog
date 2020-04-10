@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy{
       .subscribe((res: any) => {
         this.token = res.token;
         this.microblogservice.token = this.token;
+        console.log(this.token);
         this.router.navigate(['/index']);        
       },
       error => this.errorMsg = error);
