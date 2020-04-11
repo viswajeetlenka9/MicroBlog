@@ -12,7 +12,7 @@ import { HttpResponse } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy{
+export class LoginComponent implements OnInit{
 
   isloggedIn : boolean;
   errorMsg :string = '';
@@ -39,13 +39,13 @@ export class LoginComponent implements OnInit, OnDestroy{
     this.errorMsg = this.microblogservice.errorMsg;
     
   }
-
+  /*
   ngOnDestroy(){
     this.destroy$.next(true);
     // Unsubscribe from the subject
     this.destroy$.unsubscribe();
   }
-
+  */
   
   signInClick(){
       if(this.loginForm.value.remembermeCheck == true)
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy{
       .getToken(this.loginForm.value.username,this.loginForm.value.password)
       .subscribe((res: any) => {
         this.token = res.token;
-        this.microblogservice.token = this.token;
+        this.microblogservice.current_user.current_token = this.token;
         console.log(this.token);
         this.router.navigate(['/index']);        
       },

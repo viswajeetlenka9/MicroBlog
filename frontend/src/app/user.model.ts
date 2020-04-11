@@ -8,6 +8,8 @@ export class User {
       public password?: string,
       public about_me?: string,
       public last_seen?: Date,
+      public followed_count? : number,
+      public follower_count? : number,
       public token?: string,
       public token_expiration?: Date,
       public _links? : {
@@ -19,6 +21,14 @@ export class User {
     ) { }
   }
 
+  export class CurrentUser {
+    constructor(
+      public current_user_id? : number,
+      public current_username? : string,
+      public current_token? : string
+    ){}
+  }
+
 
   export class Post {
     constructor(
@@ -28,6 +38,7 @@ export class User {
       public user_id? : number,
       public language? : string,
       public author? : string,
+      public avatar? : string
     ){
       
     }

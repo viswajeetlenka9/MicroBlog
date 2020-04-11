@@ -22,36 +22,30 @@ export class ExploreComponent implements OnInit {
   constructor(private router: Router, private microblogservice:MicroBlogService) { }
 
   ngOnInit(): void {
-    const currentUser = this.microblogservice.currentUserValue;
-    const allUser_posts = this.microblogservice.allUser_postsValue;
 
-    if((this.microblogservice.token == undefined && allUser_posts == null) || this.microblogservice.token == '')
+    const current_token = JSON.parse(sessionStorage.getItem('user_token'));
+    this.microblogservice.current_user.current_token = current_token;
+
+    //const currentUser = this.microblogservice.currentUserValue;
+    //const allUser_posts = this.microblogservice.allUser_postsValue;
+
+    if((this.microblogservice.current_user == undefined) || this.microblogservice.current_user.current_token == '')
     {
       this.microblogservice.errorMsg = "Please login to access this page";
       this.microblogservice.logout();
     }
     else
     {
-      if(allUser_posts != null)
-      {
-        this.username = currentUser.username;
-        this.all_users_posts = allUser_posts;
-        this.check_previous_next();
-      }
-      else
-      {
-        this.username = this.microblogservice.username;
-        console.log(this.username);
-        this.get_allpost_from_api(this.current_page);
-      }
-      
+      this.username = this.microblogservice.current_user.current_username;
+      console.log(this.username);
+      this.get_allpost_from_api(this.current_page);
     }
   }
 
   public get_allpost_from_api(pageno : number){
     console.log(pageno);
     this.microblogservice
-            .getallPosts(this.microblogservice.token,pageno)
+            .getallPosts(this.microblogservice.current_user.current_token,pageno)
             .subscribe((res: any) => {
               this.all_users_posts = res;
               this.check_previous_next();
@@ -63,7 +57,7 @@ export class ExploreComponent implements OnInit {
   getPrevious(){
     let pageno = this.current_page - 1;
     this.microblogservice
-            .getallPosts(this.microblogservice.token,pageno)
+            .getallPosts(this.microblogservice.current_user.current_token,pageno)
             .subscribe((res: any) => {
               this.all_users_posts = res;
               this.current_page  = this.current_page - 1;
@@ -77,7 +71,7 @@ export class ExploreComponent implements OnInit {
   getNext(){
     let pageno = this.current_page + 1;
     this.microblogservice
-            .getallPosts(this.microblogservice.token,pageno)
+            .getallPosts(this.microblogservice.current_user.current_token,pageno)
             .subscribe((res: any) => {
               this.all_users_posts = res;
               this.current_page  = this.current_page + 1;

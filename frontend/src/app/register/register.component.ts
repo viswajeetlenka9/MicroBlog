@@ -25,6 +25,7 @@ export class RegisterComponent implements OnInit {
   }
 
   registerInClick(){
+    
     if(this.registerForm.value.password1 != this.registerForm.value.password2)
     {
       this.errorMsg = "Both password should be same!";

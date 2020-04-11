@@ -23,6 +23,7 @@ import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ExploreComponent } from './explore/explore.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 //import { ErrorInterceptor } from './_helpers/error.interceptor';
 
@@ -35,7 +36,8 @@ import { ExploreComponent } from './explore/explore.component';
     RegisterComponent,
     ResetpasswordComponent,
     ProfileComponent,
-    ExploreComponent
+    ExploreComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

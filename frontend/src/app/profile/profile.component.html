@@ -3,30 +3,40 @@
         <tbody>
             <tr>
                 <td width="256px">
-                    <img src="#">
-                </td><!--
+                    <img src="{{current_user._links.avatar}}">
+                </td>
                 <td>
-                    <h1>User : {{username}}</h1>
-                    <p>{{about_me}}</p>
-                    <p>Last seen on : {{timestamp}}</p>
-                    <p>{{no_follower}} followers, {{no_following}} following</p>
-                    <p><a href="#"></a>Edit your profile</p>
-                </td>-->
+                    <h1>User : {{current_user.username}}</h1>
+                    <p>{{current_user.about_me}}</p>
+                    <p>Last seen on : {{current_user.last_seen | date:'medium'}}</p>
+                    <p>{{current_user.follower_count}} followers, {{current_user.followed_count}} following</p>
+                    <p><a routerLink="/edit_profile">Edit your profile</a></p>
+                </td>
             </tr>
         </tbody>
     </table>
-    <nav aria-label="...">
-    <ul class="pager">
-        <li class="disabled">
-            <a href="#">
-                <span aria-hidden="true">&larr;</span> Newer posts
-            </a>
-        </li>
-        <li class="disabled">
-            <a href="#">
-                Older posts<span aria-hidden="true">&rarr;</span>
-            </a>
-        </li>
-    </ul>
+    <table class="table table-hover">
+        <tr *ngFor="let post of current_user_posts.items">
+            <td width="70px">
+                <a href="#">
+                    <img src="{{post.avatar}}" />
+                </a>
+            </td>
+            <td>
+                    <a href="#">
+                        {{ post.author }} 
+                    </a>
+                    said
+                <br>
+                <span id="post.id">{{ post.body }}</span>
+            </td>
+        </tr>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pager">
+          <li class="page-item float-left" [class]="isprevious_present"><a class="page-link" (click)="getPrevious()">Previous</a></li>
+          
+          <li class="page-item float-right" [class]="isnext_present"><a class="page-link" (click)="getNext()">Next</a></li>
+        </ul>
     </nav>
 </div>

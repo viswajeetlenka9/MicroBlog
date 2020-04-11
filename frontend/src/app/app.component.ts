@@ -33,6 +33,7 @@ export class AppComponent implements OnInit{
 
   redirect_to_profile()
   {
-    this.router.navigate(['/profile',this.microblogservice.username]);
+    console.log(this.microblogservice.current_user.current_username);
+    this.router.navigate(['/profile',this.microblogservice.current_user.current_username]);
   }
 }

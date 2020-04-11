@@ -105,7 +105,7 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
         data = {
             'id':self.id,
             'username':self.username,
-            #'last_seen': self.last_seen.isoformat() + 'Z',
+            'last_seen': self.last_seen.isoformat() + 'Z',
             'email':self.email,
             'about_me':self.about_me,
             'post_count':self.posts.count(),
@@ -115,7 +115,7 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
                 'self':url_for('api.get_user',id=self.id),
                 'followers': url_for('api.get_followers', id=self.id),
                 'followed': url_for('api.get_followed', id=self.id),
-                'avatar': self.avatar(64)
+                'avatar': self.avatar(256)
             }
         }
         if include_email:
@@ -173,6 +173,7 @@ class Post(db.Model,PaginatedAPIMixin):
             'user_id':self.user_id,
             'language': self.language,
             'author':self.author.username,
+            'avatar':self.author.avatar(64)
         }
         return data
 
