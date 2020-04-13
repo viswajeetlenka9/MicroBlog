@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, OnDestroy} from '@angular/core';
-import { FormBuilder,FormGroup, FormControl, Validators, RequiredValidator } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IndexComponent } from '../index/index.component';
-import { MicroBlogService } from '../micro-blog.service';
-import { Subscription, Subject } from 'rxjs';
-import { User } from '../user.model'
-import { HttpResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { first } from 'rxjs/operators'
+
+import { AuthenticationService } from '../_services/authentication.service';
+
+import { User } from '../_models/user.model';
+
 
 @Component({
   selector: 'app-login',
@@ -14,31 +16,36 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit{
 
+
   isloggedIn : boolean;
   errorMsg :string = '';
+  loading = false;
+  submitted = false;
+  returnUrl: string;
   token : string = '';
   current_user : User;
-  verify_user: Subscription;
-  myForm : FormGroup;
-  loginForm = new FormGroup({
-    username: new FormControl('',Validators.required),
-    password: new FormControl('',Validators.required),
-    remembermeCheck: new FormControl('')
-  })
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  loginForm : FormGroup;
+  
+  //destroy$: Subject<boolean> = new Subject<boolean>();
 
-  //@Input() username : IndexComponent;
-  constructor(private fb: FormBuilder,private router:Router, private microblogservice: MicroBlogService ) { }
+  constructor(private formBuilder: FormBuilder,private router:Router,private route:ActivatedRoute, private authenticationService: AuthenticationService ) { }
 
   ngOnInit(): void {
-    this.isloggedIn = this.microblogservice.isloggedIn;
-    if(this.isloggedIn)
-    {
-      this.microblogservice.logout();
-    }
-    this.errorMsg = this.microblogservice.errorMsg;
-    
+    // reset login status
+    this.authenticationService.logout();
+
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      remembermeCheck: [false]
+    })
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
+
+  // convenience getter for easy access to form fields
+  get f() { return this.loginForm.controls; }
   /*
   ngOnDestroy(){
     this.destroy$.next(true);
@@ -48,18 +55,29 @@ export class LoginComponent implements OnInit{
   */
   
   signInClick(){
+      this.submitted = true;
+
+      // stop here if form is invalid
+      if (this.loginForm.invalid) {
+        this.errorMsg = "Invalid Form. Please check!";
+        return;
+      }
+
+      this.loading = true;
       if(this.loginForm.value.remembermeCheck == true)
       {
         alert('remember me checked');
       }
-      this.verify_user = this.microblogservice
-      .getToken(this.loginForm.value.username,this.loginForm.value.password)
-      .subscribe((res: any) => {
-        this.token = res.token;
-        this.microblogservice.current_user.current_token = this.token;
-        console.log(this.token);
-        this.router.navigate(['/index']);        
+      let val = this.loginForm.value;
+      this.authenticationService
+      .get_token_from_api(val.username,val.password)
+      .pipe(first())
+      .subscribe(data => {
+        this.router.navigate([this.returnUrl]);    
       },
-      error => this.errorMsg = error);
+      error => {
+        this.errorMsg = error;
+        this.loading = false;
+      });
   }
 }

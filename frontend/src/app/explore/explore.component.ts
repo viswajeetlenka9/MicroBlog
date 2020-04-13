@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
-import { User, Post, PostArray } from '../user.model';
-import { MicroBlogService } from '../micro-blog.service';
+import { PostArray } from '../_models/user.model';
+import { MicroBlogService } from '../_services/micro-blog.service';
 
 @Component({
   selector: 'app-explore',
@@ -22,30 +21,18 @@ export class ExploreComponent implements OnInit {
   constructor(private router: Router, private microblogservice:MicroBlogService) { }
 
   ngOnInit(): void {
+    
+    const currentUser = (JSON.parse(localStorage.getItem('currentUser')));
+    this.username = currentUser.username;
 
-    const current_token = JSON.parse(sessionStorage.getItem('user_token'));
-    this.microblogservice.current_user.current_token = current_token;
+    this.get_allpost_from_api(this.current_page);
 
-    //const currentUser = this.microblogservice.currentUserValue;
-    //const allUser_posts = this.microblogservice.allUser_postsValue;
-
-    if((this.microblogservice.current_user == undefined) || this.microblogservice.current_user.current_token == '')
-    {
-      this.microblogservice.errorMsg = "Please login to access this page";
-      this.microblogservice.logout();
-    }
-    else
-    {
-      this.username = this.microblogservice.current_user.current_username;
-      console.log(this.username);
-      this.get_allpost_from_api(this.current_page);
-    }
   }
 
   public get_allpost_from_api(pageno : number){
     console.log(pageno);
     this.microblogservice
-            .getallPosts(this.microblogservice.current_user.current_token,pageno)
+            .getallPosts(pageno)
             .subscribe((res: any) => {
               this.all_users_posts = res;
               this.check_previous_next();
@@ -56,30 +43,16 @@ export class ExploreComponent implements OnInit {
 
   getPrevious(){
     let pageno = this.current_page - 1;
-    this.microblogservice
-            .getallPosts(this.microblogservice.current_user.current_token,pageno)
-            .subscribe((res: any) => {
-              this.all_users_posts = res;
-              this.current_page  = this.current_page - 1;
-              this.check_previous_next();
-              
-              //console.log(moment(this.current_user_posts[0].timestamp).fromNow());
-            },
-          );
+    this.get_allpost_from_api(pageno);
+    this.current_page  = this.current_page - 1;
+    this.check_previous_next();
   }
 
   getNext(){
     let pageno = this.current_page + 1;
-    this.microblogservice
-            .getallPosts(this.microblogservice.current_user.current_token,pageno)
-            .subscribe((res: any) => {
-              this.all_users_posts = res;
-              this.current_page  = this.current_page + 1;
-              this.check_previous_next();
-              
-              //console.log(moment(this.current_user_posts[0].timestamp).fromNow());
-            },
-          );
+    this.get_allpost_from_api(pageno);
+    this.current_page  = this.current_page + 1;
+    this.check_previous_next();
   }
 
   check_previous_next(){

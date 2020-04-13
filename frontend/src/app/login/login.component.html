@@ -7,18 +7,15 @@
     <form [formGroup]="loginForm" (ngSubmit)="signInClick()">
         <div class="form-group" >
             <label for="username">Username</label>
-            <input type="text" formControlName="username" name="username" class="form-control" placeholder="Username" required>
+            <input type="text" formControlName="username" name="username" class="form-control" placeholder="Username" >
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" formControlName="password" name="password" class="form-control" placeholder="Password" required>
-            <div class="invalid-feedback">
-                <span>Password is required!</span>
-            </div>
+            <input type="password" formControlName="password" name="password" class="form-control" placeholder="Password" >
         </div>
         <div class="form-check">
             <input type="checkbox" formControlName="remembermeCheck" class="form-check-input" >
-            <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+            <label class="form-check-label" for="rememberMe">Remember Me</label>
           </div>
           <br>
         <button class="btn btn-secondary" >Sign In</button>

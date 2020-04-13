@@ -7,7 +7,9 @@ import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ExploreComponent } from './explore/explore.component';
-import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { EditprofileComponent } from './editprofile/editprofile.component';
+import { AuthGuard } from './_guard/auth.guard';
+//import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 
 const routes: Routes = [
@@ -19,7 +21,8 @@ const routes: Routes = [
   },
   {
     path: "index",
-    component: IndexComponent
+    component: IndexComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: "login",
@@ -39,11 +42,12 @@ const routes: Routes = [
   },
   {
     path: "explore",
-    component: ExploreComponent
+    component: ExploreComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: "edit_profile",
-    component: EditProfileComponent
+    path: "editprofile",
+    component: EditprofileComponent
   },
   {
     path: "**",//The wild card route should be the last route otherwise the routes below wildcard route will be ignored.

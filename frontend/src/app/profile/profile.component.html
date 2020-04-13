@@ -10,7 +10,7 @@
                     <p>{{current_user.about_me}}</p>
                     <p>Last seen on : {{current_user.last_seen | date:'medium'}}</p>
                     <p>{{current_user.follower_count}} followers, {{current_user.followed_count}} following</p>
-                    <p><a routerLink="/edit_profile">Edit your profile</a></p>
+                    <p *ngIf="iscurrent_user == true"><a routerLink="/editprofile">Edit your profile</a></p>
                 </td>
             </tr>
         </tbody>

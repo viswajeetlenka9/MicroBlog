@@ -7,27 +7,46 @@
     <form [formGroup]="registerForm" (ngSubmit)="registerInClick()">
         <div class="form-group" >
             <label for="username">Username</label>
-            <input type="text" formControlName="username" name="username" class="form-control" placeholder="Username" required>
+            <input type="text" formControlName="username" class="form-control" name="username" placeholder="Username" >
+            <!--
+            <input type="text" formControlName="username" class="form-control" name="username" placeholder="Username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+            <div *ngIf="submitted && f.username?.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.required">Username is required</div>
+            </div>-->
         </div>
         <div class="form-group" >
             <label for="username">Email</label>
-            <input type="email" formControlName="email" name="email" class="form-control" placeholder="Email" required>
+            <input type="email" formControlName="email" class="form-control" name="email" placeholder="Email" >
+            <!--
+            <input type="email" formControlName="email" class="form-control" name="email" placeholder="Email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+            </div>-->
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" formControlName="password1" name="password1" class="form-control" placeholder="Password" required>
-            <div class="invalid-feedback">
-                <span>Password is required!</span>
-            </div>
+            <input type="password" formControlName="password" class="form-control" name="password" placeholder="Password" >
+            <!--
+            <input type="password" formControlName="password" class="form-control" name="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+            </div>-->
         </div>
         <div class="form-group">
-            <label for="password">Repeat Password</label>
-            <input type="password" formControlName="password2" name="password2" class="form-control" placeholder=" Repeat Password" required>
-            <div class="invalid-feedback">
-                <span>Password is required!</span>
-            </div>
+            <label for="password">Confirm Password</label>
+            <input type="password" formControlName="confirmpassword" class="form-control" name="confirmpassword" placeholder="Confirm Password" >
+            <!--
+            <input type="password" formControlName="confirmpassword" class="form-control" name="confirmpassword" placeholder="Confirm Password" [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors }">
+            <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmpassword.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.confirmpassword.errors.mustMatch">Both password must macth</div>
+            </div>-->
         </div>
         <br>
-        <button class="btn btn-secondary" >Register</button>
+        <div class="text-center">
+            <button class="btn btn-secondary" >Register</button>
+        </div>
     </form>
 </div>

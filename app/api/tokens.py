@@ -8,8 +8,9 @@ from app.api.auth import basic_auth, token_auth
 @basic_auth.login_required
 def get_token():
 	token = g.current_user.get_token()
+	token_expiration = g.current_user.get_token_expiration()
 	db.session.commit()
-	response = jsonify({'token': token})
+	response = jsonify({'token': token, 'expiration':token_expiration})
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 

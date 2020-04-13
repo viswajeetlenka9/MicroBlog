@@ -138,6 +138,9 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
         db.session.add(self)
         return self.token
 
+    def get_token_expiration(self):
+        return self.token_expiration
+
     def revoke_token(self):
         self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
 

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup, FormControl, Validators, RequiredValidator } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MicroBlogService } from '../micro-blog.service';
+
+import { MustMatch } from '../_validators/must-match.validators';
+import { MicroBlogService } from '../_services/micro-blog.service';
 
 @Component({
   selector: 'app-register',
@@ -10,53 +12,45 @@ import { MicroBlogService } from '../micro-blog.service';
 })
 export class RegisterComponent implements OnInit {
 
-  formValid : boolean = true;
   errorMsg :string = '';
-  registerForm = new FormGroup({
-    username: new FormControl('',Validators.required),
-    email: new FormControl('',Validators.required),
-    password1: new FormControl('',Validators.required),
-    password2: new FormControl('',Validators.required),
-  })
+  registerForm : FormGroup;
+  submitted = false;
 
-  constructor(private fb: FormBuilder,private router:Router, private microblogservice: MicroBlogService) { }
+  constructor(private formBuilder: FormBuilder,private router:Router, private microblogservice: MicroBlogService) { }
 
   ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      confirmpassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmpassword')
+    });
   }
 
+  // convenience getter for easy access to form fields
+  get f() { return this.registerForm.controls; }
+
   registerInClick(){
-    
-    if(this.registerForm.value.password1 != this.registerForm.value.password2)
-    {
-      this.errorMsg = "Both password should be same!";
-      this.formValid = false;
-    }
-    else
-    {
-      this.formValid = true;
-    }
-    if(this.registerForm.value.username == '' || this.registerForm.value.email == '' || this.registerForm.value.password1 == '' || this.registerForm.value.password2 == '')
-    {
-      this.errorMsg = "Field cannot be empty!";
-      this.formValid = false;
-    }
-    else
-    {
+    this.submitted = true;
 
-      this.formValid = true;
-    }
-
-    if(this.formValid)
+    if(this.registerForm.invalid)
     {
-      this.microblogservice
-      .registerUser(this.registerForm.value.username,this.registerForm.value.email,this.registerForm.value.password1)
-      .subscribe((res: any) => {
-        console.log(res);
-        this.microblogservice.errorMsg = "Congratulations, you are now a registered user!";
-        this.router.navigate(['/login']);        
-      },
-      error => this.errorMsg = error.error.message);
+      this.errorMsg = "Form is invalid. Please fill in the details correctly";
+      return;
     }
+    let val = this.registerForm.value;
+    this.microblogservice
+    .registerUser(val.username,val.email,val.password1)
+    .subscribe((res: any) => {
+      this.errorMsg = "Congratulations, you are now a registered user!";
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }
+      , 5000);       
+    },
+    error => this.errorMsg = error.error.message);
   }
 
 }

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { MicroBlogService } from './micro-blog.service';
 import {Observable, BehaviorSubject, throwError, of} from 'rxjs';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs';
+
+import { AuthenticationService } from './_services/authentication.service';
+import { MicroBlogService } from './_services/micro-blog.service';
+
 
 @Component({
   selector: 'app-root',
@@ -10,30 +14,22 @@ import { Router } from '@angular/router'
 })
 export class AppComponent implements OnInit{
   title = 'frontend';
-
-  constructor(private router: Router,private microblogservice: MicroBlogService){
-    
+  token : string;
+  constructor(private router: Router,private authenticationService:AuthenticationService,private microblogservice: MicroBlogService){
+    this.token = localStorage.getItem('id_token');
   }
 
   ngOnInit(){
     
-    if(localStorage.getItem('currentUser') != null)
-    {
-      this.microblogservice.isloggedIn = true;
-    }
-    else{
-      this.microblogservice.isloggedIn = false;
-    }
   }
 
   public get loggedIn(): boolean {
-    //console.log(this.microblogservice.isloggedIn);
-    return this.microblogservice.isloggedIn;
+    return this.authenticationService.isLoggedIn();
   }
 
   redirect_to_profile()
   {
-    console.log(this.microblogservice.current_user.current_username);
-    this.router.navigate(['/profile',this.microblogservice.current_user.current_username]);
+    const currentUser = (JSON.parse(localStorage.getItem('currentUser')));
+    this.router.navigate(['/profile',currentUser.username]);
   }
 }

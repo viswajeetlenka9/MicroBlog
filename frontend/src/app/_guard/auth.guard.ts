@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { MicroBlogService } from '../micro-blog.service';
+import { MicroBlogService } from '../_services/micro-blog.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -11,8 +11,9 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const username = this.microBlogService.username;
-        if (username != '') {
+        const idToken = localStorage.getItem("id_token");
+
+        if (idToken) {
             // logged in so return true
             return true;
         }
